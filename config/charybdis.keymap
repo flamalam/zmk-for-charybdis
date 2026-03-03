@@ -1,96 +1,296 @@
-#include <dt-bindings/zmk/mouse.h>
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
+// =============================================================================
+// Charybdis Cordless ZMK Keymap
+// Optimised for Victorian Government report writing + RSI management
+//
+// LAYERS:
+//   0 BASE    — QWERTY + home row mods + Caps Word
+//   1 NAV     — arrows, document navigation, clipboard
+//   2 PHRASES — boilerplate report text macros
+//   3 SYM     — symbols, Bluetooth management
+//   4 NUM     — numbers on home row, F-keys on top row
+//   5 WIN     — window/monitor management, app switching
+//
+// THUMB KEYS:
+//   Left thumb 1:  tap = Space,  hold = NAV layer
+//   Left thumb 2:  tap = Tab,    hold = SYM layer
+//   Right thumb 1: tap = Enter,  hold = PHRASES layer
+//   Right thumb 2: tap = Bspc,   hold = NUM layer
+//
+// HOME ROW MODS (GACS order):
+//   Left:  A=GUI  S=ALT  D=CTRL  F=SHIFT
+//   Right: J=SHIFT  K=CTRL  L=ALT  ;=GUI
+//
+// WIN LAYER ACCESS:
+//   Hold left Space (NAV), tap G → toggles WIN layer on/off
+//   Thumb keys also exit WIN layer
+//
+// TASKBAR PIN ORDER (set this up in Windows before using WIN layer):
+//   1=Edge  2=Outlook  3=Word  4=Adobe PDF  5=eJustice
+//   6=Centurion  7=PIMS  8=Teams  9=Notes  0=Sticky Notes
+//
+// PHRASES LAYER (hold right thumb Enter):
+//   A = Pre-Employment Security Check dated [then Alt+Shift+D for date]
+//   S = of their PESC form, applicant answered "No" however checks reveal
+//   D = Information suggests
+//   F = Information received
+//   J = IR edited to protect source and uphold writing standards. Released to I&I
+//   K = Location to tag staff member. Released to I&I, SMD and
+//   L = Staff member tagged. Released to I&I, SMD and
+//   ; = attended the following police interviews:
+//
+// WORD AUTOCORRECT TRIGGERS (match phrases layer):
+//   ;;1  ;;2  ;;5  ;;6  ;;7  ;;8  ;;9  ;;10
+// =============================================================================
 
-&lt {
-    tapping-term-ms = <200>;
-    flavor = "balanced";
-    quick-tap-ms = <150>;
-};
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/mouse.h>
+
+// Layer index definitions
+#define BASE    0
+#define NAV     1
+#define PHRASES 2
+#define SYM     3
+#define NUM     4
+#define WIN     5
 
 / {
+
+    // =========================================================================
+    // BEHAVIOURS
+    // =========================================================================
+
+    behaviors {
+
+        // Home row mod: tap for letter, hold for modifier
+        // Increase tapping-term-ms if mods trigger accidentally (try 220-250)
+        // Decrease if letters come through when you meant a modifier (try 180)
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            require-prior-idle-ms = <150>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        // Thumb layer tap: tap for key, hold for layer
+        lt_tp: layer_tap_preferred {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LAYER_TAP_PREFERRED";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick-tap-ms = <125>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&kp>;
+        };
+
+    };
+
+    // =========================================================================
+    // MACROS
+    // Note: &type helper must be supported by your vendor's ZMK fork.
+    // If build fails, convert phrases to &kp sequences using a ZMK macro converter.
+    //
+    // For date insertion after phrase A (;;1), press Alt+Shift+D in Word
+    // to insert today's date as a dynamic field.
+    // =========================================================================
+
+    macros {
+
+        // LEFT HAND — PESC opening and information gathering
+        // A: Pre-Employment Security Check dated [user presses Alt+Shift+D for date]
+        phrase_a: phrase_a {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_A";
+            #binding-cells = <0>;
+            bindings = <&type "Pre-Employment Security Check dated ">;
+        };
+
+        // S: PESC form / No answer
+        phrase_s: phrase_s {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_S";
+            #binding-cells = <0>;
+            bindings = <&type "of their Pre-Employment Security Check (PESC) form, applicant answered \"No\" however checks reveal">;
+        };
+
+        // D: Information suggests
+        phrase_d: phrase_d {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_D";
+            #binding-cells = <0>;
+            bindings = <&type "Information suggests">;
+        };
+
+        // F: Information received
+        phrase_f: phrase_f {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_F";
+            #binding-cells = <0>;
+            bindings = <&type "Information received">;
+        };
+
+        // RIGHT HAND — IR/release/tagging workflow
+        // J: IR edited
+        phrase_j: phrase_j {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_J";
+            #binding-cells = <0>;
+            bindings = <&type "IR edited to protect source and uphold writing standards. Released to I&I">;
+        };
+
+        // K: Location to tag
+        phrase_k: phrase_k {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_K";
+            #binding-cells = <0>;
+            bindings = <&type "Location to tag staff member. Released to I&I, SMD and">;
+        };
+
+        // L: Staff member tagged
+        phrase_l: phrase_l {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_L";
+            #binding-cells = <0>;
+            bindings = <&type "Staff member tagged. Released to I&I, SMD and">;
+        };
+
+        // ;: Police interviews
+        phrase_semi: phrase_semi {
+            compatible = "zmk,behavior-macro";
+            label = "PHRASE_SEMI";
+            #binding-cells = <0>;
+            bindings = <&type "attended the following police interviews:">;
+        };
+
+    };
+
+    // =========================================================================
+    // KEYMAP
+    // =========================================================================
+
     keymap {
         compatible = "zmk,keymap";
 
-        layer_0 {
+        // ---------------------------------------------------------------------
+        // LAYER 0: BASE
+        // ---------------------------------------------------------------------
+        base_layer {
+            label = "BASE";
             bindings = <
-&kp ESC         &kp N1  &kp N2  &kp N3        &kp N4     &kp N5      &kp N6     &kp N7     &kp N8     &kp N9            &kp N0    &kp BACKSPACE
-&kp TAB         &kp Q   &kp W   &kp E         &kp R      &kp T       &kp Y      &kp U      &kp I      &kp O             &kp P     &kp BSLH
-&kp LEFT_SHIFT  &kp A   &kp S   &kp D         &kp F      &kp G       &kp H      &kp J      &kp K      &kp L             &kp SEMI  &kp SQT
-&kp LCTRL       &kp Z   &kp X   &kp C         &kp V      &kp B       &kp N      &kp M      &kp COMMA  &kp LEFT_BRACKET  &kp FSLH  &kp MINUS
-                                &kp LEFT_WIN  &kp SPACE  &mo 1       &kp LALT   &kp GRAVE
-                                              &mkp MB1   &mkp MB2    &kp ENTER
+                &kp TAB      &kp Q        &kp W        &kp E         &kp R          &kp T         &kp Y        &kp U         &kp I         &kp O        &kp P           &kp BSPC
+                &caps_word   &hm LGUI A   &hm LALT S   &hm LCTRL D   &hm LSHFT F    &kp G         &kp H        &hm RSHFT J   &hm RCTRL K   &hm RALT L   &hm RGUI SEMI   &kp SQT
+                &kp LSHFT    &kp Z        &kp X        &kp C         &kp V          &kp B         &kp N        &kp M         &kp COMMA     &kp DOT      &kp FSLH        &kp RET
+                                                        &lt_tp NAV SPACE   &lt_tp SYM TAB           &lt_tp PHRASES RET   &lt_tp NUM BSPC
             >;
-
-            trackball-bindings = <&tmv_coarse>;
         };
 
-        layer_1 {
+        // ---------------------------------------------------------------------
+        // LAYER 1: NAV
+        // Hold left thumb Space to activate
+        // G = toggle WIN layer
+        // ---------------------------------------------------------------------
+        nav_layer {
+            label = "NAV";
             bindings = <
-&kp F1          &kp F2  &kp F3  &kp F4        &kp F5     &kp F6        &kp F7     &kp F8      &kp F9      &kp F10            &kp F11  &kp F12
-&kp CAPS        &none   &none   &none         &none      &bt BT_NXT    &none      &none       &kp UP      &none              &none    &none
-&kp LEFT_SHIFT  &none   &none   &none         &none      &bt BT_CLR    &none      &kp LEFT    &kp DOWN    &kp RIGHT          &none    &none
-&kp LCTRL       &none   &none   &none         &none      &none         &none      &none       &kp PERIOD  &kp RIGHT_BRACKET  &none    &kp EQUAL
-                                &kp LEFT_WIN  &kp SPACE  &none         &kp LALT   &kp DELETE
-                                              &mkp MB1   &mkp MB2      &kp ENTER
+                &trans       &kp LC(Z)    &kp LC(X)    &kp LC(C)     &kp LC(V)      &kp LC(Y)     &kp PG_UP    &kp HOME      &kp UP        &kp END      &kp DEL         &trans
+                &trans       &kp LGUI     &kp LALT     &kp LCTRL     &kp LSHFT      &tog WIN      &kp PG_DN    &kp LEFT      &kp DOWN      &kp RIGHT    &kp RET         &trans
+                &trans       &trans       &trans       &trans        &trans         &trans        &trans       &kp LC(LEFT)  &trans        &kp LC(RIGHT) &trans         &trans
+                                                        &trans         &trans                       &trans       &trans
             >;
-
-            trackball-bindings = <&tsl>;
         };
 
-        /* layer_2 {
+        // ---------------------------------------------------------------------
+        // LAYER 2: PHRASES
+        // Hold right thumb Enter to activate
+        //
+        // Left hand:
+        //   A = Pre-Employment Security Check dated
+        //   S = of their PESC form, applicant answered "No" however checks reveal
+        //   D = Information suggests
+        //   F = Information received
+        //
+        // Right hand:
+        //   J = IR edited to protect source and uphold writing standards. Released to I&I
+        //   K = Location to tag staff member. Released to I&I, SMD and
+        //   L = Staff member tagged. Released to I&I, SMD and
+        //   ; = attended the following police interviews:
+        // ---------------------------------------------------------------------
+        phrases_layer {
+            label = "PHRASES";
             bindings = <
-&none  &none   &none    &none   &none         &none         &kp N1         &none         &none     &none  &none   &to 0
-&none  &none   &none    &none   &none         &none         &none         &none          &rgb_ug RGB_BRD &rgb_ug RGB_BRI  &rgb_ug RGB_EFF   &rgb_ug RGB_TOG
-&none  &none   &none    &none   &none         &none         &none         &mkp LCLK     &mkp RCLK  &none  &none   &none
-&none  &none   &none    &none   &bt BT_NXT  &bt BT_CLR    &none         &none         &none     &none  &none   &none
-                                   &none         &none         &none         &none         &none
-                                                 &none         &none         &none
+                &none        &none        &none        &none         &none          &none         &none        &none         &none         &none        &none           &none
+                &none        &phrase_a    &phrase_s    &phrase_d     &phrase_f      &none         &none        &phrase_j     &phrase_k     &phrase_l    &phrase_semi    &none
+                &none        &none        &none        &none         &none          &none         &none        &none         &none         &none        &none           &none
+                                                        &none          &none                        &trans       &none
             >;
-          trackball-bindings = <&tsl>;
-            
         };
 
-       Mouse {
+        // ---------------------------------------------------------------------
+        // LAYER 3: SYM
+        // Hold left thumb Tab to activate
+        //
+        // Top row:  ` ! @ # $ %  |  ^ & * { }  Del
+        // Home row: ( [ / - |    |  _ \ ] ) " '
+        // Bot row:  BT controls  |  = + < >
+        // ---------------------------------------------------------------------
+        sym_layer {
+            label = "SYM";
             bindings = <
-&none        &none         &none         &none         &none      &none         &none       &none      &none         &none         &none         &none
-&none        &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 3  &none      &bt BT_CLR    &bt BT_CLR  &none      &bt BT_SEL 2  &bt BT_SEL 1  &bt BT_SEL 0  &none
-&none        &trans        &trans        &mkp MCLK     &trans     &none         &none       &trans     &mkp MCLK     &trans        &trans        &none
-&bootloader  &trans        &mkp RCLK     &mo 4         &mkp LCLK  &mo 5         &mo 5       &mkp LCLK  &mo 4         &mkp RCLK     &trans        &bootloader
-                                         &mo 5         &mkp LCLK  &mkp RCLK     &mkp RCLK   &mkp LCLK
-                                                       &none      &trans        &trans
+                &kp GRAVE    &kp EXCL     &kp AT       &kp HASH      &kp DLLR       &kp PRCNT     &kp CARET    &kp AMPS      &kp STAR      &kp LBRC     &kp RBRC        &kp DEL
+                &trans       &kp LPAR     &kp LBKT     &kp FSLH      &kp MINUS      &kp PIPE      &kp UNDER    &kp BSLH      &kp RBKT      &kp RPAR     &kp DQT         &kp SQT
+                &trans       &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &bt BT_CLR     &trans        &kp EQUAL    &kp PLUS      &kp LT        &kp GT       &trans          &trans
+                                                        &trans         &trans                        &trans       &trans
             >;
-
-            
         };
 
-        layer_4 {
+        // ---------------------------------------------------------------------
+        // LAYER 4: NUM
+        // Hold right thumb Backspace to activate
+        //
+        // Top row:  F1-F5      |  F6-F10
+        // Home row: 1 2 3 4 5  |  6 7 8 9 0
+        // Bot row:  (spare)    |  . (decimal)
+        // ---------------------------------------------------------------------
+        num_layer {
+            label = "NUM";
             bindings = <
-&trans  &trans  &trans     &trans     &trans     &trans       &trans     &trans     &trans     &trans     &trans  &trans
-&trans  &trans  &trans     &trans     &trans     &trans       &trans     &trans     &trans     &trans     &trans  &trans
-&trans  &trans  &trans     &mkp MCLK  &trans     &trans       &trans     &trans     &mkp MCLK  &trans     &trans  &trans
-&trans  &trans  &mkp RCLK  &trans     &mkp LCLK  &trans       &trans     &mkp LCLK  &trans     &mkp RCLK  &trans  &trans
-                           &trans     &mkp LCLK  &mkp RCLK    &mkp RCLK  &mkp LCLK
-                                      &trans     &trans       &trans
+                &trans       &kp F1       &kp F2       &kp F3        &kp F4         &kp F5        &kp F6       &kp F7        &kp F8        &kp F9       &kp F10         &trans
+                &trans       &kp N1       &kp N2       &kp N3        &kp N4         &kp N5        &kp N6       &kp N7        &kp N8        &kp N9       &kp N0          &trans
+                &trans       &trans       &trans       &trans        &trans         &trans        &trans       &trans        &kp DOT       &trans       &trans          &trans
+                                                        &trans         &trans                        &trans       &trans
             >;
-                
-                
-                trackball-bindings = <&tsl>;
         };
 
-        layer_5 {
+        // ---------------------------------------------------------------------
+        // LAYER 5: WIN — Window & App Management
+        // Toggle: NAV layer → tap G  |  Exit: tap G again or any thumb key
+        //
+        // TASKBAR PIN ORDER — set up in Windows before use:
+        //   Win+1 = Edge        Win+6 = Centurion
+        //   Win+2 = Outlook     Win+7 = PIMS
+        //   Win+3 = Word        Win+8 = Teams
+        //   Win+4 = Adobe PDF   Win+9 = Notes
+        //   Win+5 = eJustice    Win+0 = Sticky Notes
+        //
+        // Top row right: Y=Snap←  U=Mon←  I=Maximise  O=Mon→  P=Snap→
+        // Top row left:  Q=VD←    W=VD→   E=VD New    R=VD Close
+        // Home row left:  A=Edge  S=Outlook  D=Word  F=PDF  G=eJustice
+        // Home row right: J=Centurion  K=PIMS  L=Teams  ;=Notes  '=Sticky Notes
+        // ---------------------------------------------------------------------
+        win_layer {
+            label = "WIN";
             bindings = <
-&trans  &trans  &trans     &trans     &trans     &trans       &trans     &trans     &trans     &trans     &trans  &trans
-&trans  &trans  &trans     &trans     &trans     &trans       &trans     &trans     &trans     &trans     &trans  &trans
-&trans  &trans  &trans     &mkp MCLK  &trans     &trans       &trans     &trans     &mkp MCLK  &trans     &trans  &trans
-&trans  &trans  &mkp RCLK  &trans     &mkp LCLK  &trans       &trans     &mkp LCLK  &trans     &mkp RCLK  &trans  &trans
-                           &trans     &mkp LCLK  &mkp RCLK    &mkp RCLK  &mkp LCLK
-                                      &trans     &trans       &trans
+                &trans       &kp LG(LC(LEFT))  &kp LG(LC(RIGHT))  &kp LG(LC(D))  &kp LG(LC(F4))  &trans        &kp LG(LEFT)     &kp LG(LS(LEFT))  &kp LG(UP)    &kp LG(LS(RIGHT))  &kp LG(RIGHT)   &trans
+                &trans       &kp LG(N1)        &kp LG(N2)         &kp LG(N3)     &kp LG(N4)      &kp LG(N5)    &kp LG(N6)       &kp LG(N7)        &kp LG(N8)    &kp LG(N9)         &kp LG(N0)      &trans
+                &trans       &trans            &trans             &trans         &trans          &trans        &trans           &trans            &trans        &trans             &trans          &trans
+                                                                   &tog WIN        &trans                         &trans           &tog WIN
             >;
-                trackball-bindings = <&tmv_fine>;
-                
-        };*/
+        };
+
     };
 };
