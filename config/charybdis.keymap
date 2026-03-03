@@ -2,11 +2,14 @@
 // Charybdis Cordless ZMK Keymap
 // Optimised for Victorian Government report writing + RSI management
 //
+// NOTE: This keymap is tuned for the vendor ZMK fork at:
+// github.com/Vzhao-L/zmk-for-charybdis
+// require-prior-idle-ms removed as it is not supported in this fork's
+// older ZMK version.
+//
 // PHRASES LAYER NOTE:
-// This fork does not support &type string macros.
-// Phrases layer instead types Word AutoCorrect triggers (;;1 through ;;10)
+// Phrases layer types Word AutoCorrect triggers (;;1 through ;;10)
 // which Word expands automatically to the full phrase.
-// Make sure your Word AutoCorrect entries are set up before using.
 //
 // LAYERS:
 //   0 BASE    — QWERTY + home row mods + Caps Word
@@ -28,21 +31,14 @@
 //
 // WIN LAYER ACCESS:
 //   Hold left Space (NAV), tap G → toggles WIN layer on/off
-//   Thumb keys also exit WIN layer
 //
-// TASKBAR PIN ORDER (set this up in Windows before using WIN layer):
+// TASKBAR PIN ORDER:
 //   1=Edge  2=Outlook  3=Word  4=Adobe PDF  5=eJustice
 //   6=Centurion  7=PIMS  8=Teams  9=Notes  0=Sticky Notes
 //
 // PHRASES LAYER (hold right thumb Enter):
-//   A = ;;1  (Pre-Employment Security Check dated)
-//   S = ;;2  (PESC form, applicant answered No)
-//   D = ;;5  (Information suggests)
-//   F = ;;6  (Information received)
-//   J = ;;7  (IR edited...)
-//   K = ;;8  (Location to tag...)
-//   L = ;;9  (Staff member tagged...)
-//   ; = ;;10 (attended the following police interviews:)
+//   A = ;;1   S = ;;2   D = ;;5   F = ;;6
+//   J = ;;7   K = ;;8   L = ;;9   ; = ;;10
 // =============================================================================
 
 #include <behaviors.dtsi>
@@ -76,7 +72,6 @@
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             quick-tap-ms = <125>;
-            require-prior-idle-ms = <150>;
             flavor = "tap-preferred";
             bindings = <&kp>, <&kp>;
         };
@@ -96,9 +91,7 @@
 
     // =========================================================================
     // MACROS
-    // Types Word AutoCorrect triggers instead of full phrases.
-    // Each macro types ;;N which Word expands to the full phrase.
-    // SEMI SEMI = ;; prefix, then the number
+    // Types Word AutoCorrect triggers which expand to full phrases in Word.
     // =========================================================================
 
     macros {
@@ -207,10 +200,8 @@
         // ---------------------------------------------------------------------
         // LAYER 2: PHRASES
         // Hold right thumb Enter to activate
-        // Types Word AutoCorrect triggers which expand to full phrases
-        //
-        //   A = ;;1   S = ;;2   D = ;;5   F = ;;6
-        //   J = ;;7   K = ;;8   L = ;;9   ; = ;;10
+        // Types AutoCorrect triggers: A=;;1 S=;;2 D=;;5 F=;;6
+        //                             J=;;7 K=;;8 L=;;9 ;=;;10
         // ---------------------------------------------------------------------
         phrases_layer {
             label = "PHRASES";
@@ -225,10 +216,6 @@
         // ---------------------------------------------------------------------
         // LAYER 3: SYM
         // Hold left thumb Tab to activate
-        //
-        // Top row:  ` ! @ # $ %  |  ^ & * { }  Del
-        // Home row: ( [ / - |    |  _ \ ] ) " '
-        // Bot row:  BT controls  |  = + < >
         // ---------------------------------------------------------------------
         sym_layer {
             label = "SYM";
@@ -243,10 +230,6 @@
         // ---------------------------------------------------------------------
         // LAYER 4: NUM
         // Hold right thumb Backspace to activate
-        //
-        // Top row:  F1-F5      |  F6-F10
-        // Home row: 1 2 3 4 5  |  6 7 8 9 0
-        // Bot row:  (spare)    |  . (decimal)
         // ---------------------------------------------------------------------
         num_layer {
             label = "NUM";
@@ -261,18 +244,6 @@
         // ---------------------------------------------------------------------
         // LAYER 5: WIN — Window & App Management
         // Toggle: NAV layer → tap G  |  Exit: tap G again or any thumb key
-        //
-        // TASKBAR PIN ORDER — set up in Windows before use:
-        //   Win+1 = Edge        Win+6 = Centurion
-        //   Win+2 = Outlook     Win+7 = PIMS
-        //   Win+3 = Word        Win+8 = Teams
-        //   Win+4 = Adobe PDF   Win+9 = Notes
-        //   Win+5 = eJustice    Win+0 = Sticky Notes
-        //
-        // Top row right: Y=Snap←  U=Mon←  I=Maximise  O=Mon→  P=Snap→
-        // Top row left:  Q=VD←    W=VD→   E=VD New    R=VD Close
-        // Home row left:  A=Edge  S=Outlook  D=Word  F=PDF  G=eJustice
-        // Home row right: J=Centurion  K=PIMS  L=Teams  ;=Notes  '=Sticky Notes
         // ---------------------------------------------------------------------
         win_layer {
             label = "WIN";
