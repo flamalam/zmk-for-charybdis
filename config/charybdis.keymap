@@ -5,7 +5,7 @@
 #include <dt-bindings/zmk/pointing.h>
 
 // =============================================================================
-// Charybdis Cordless ZMK Keymap - Victorian Gov Edition (Fork Fix)
+// Charybdis Cordless ZMK Keymap - Victorian Gov Edition (Safe Build)
 // =============================================================================
 
 #define BASE   0
@@ -88,7 +88,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // Custom behavior: Hold for Snipe Layer, Tap to toggle Scroll
         sc_sn: scroll_snipe {
             compatible = "zmk,behavior-hold-tap";
             label = "SCROLL_SNIPE";
@@ -120,7 +119,6 @@
                                                                  &cw_nav NAV 0  &cb_sym SYM 0  &sc_sn SNIPE SCRL &lt NUM BSPC &kp SPACE
                                                                  &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tmv_coarse>;
         };
 
         layer_1 {
@@ -132,7 +130,6 @@
                                    &trans         &trans         &trans      &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tmv_coarse>;
         };
 
         layer_2 {
@@ -155,7 +152,6 @@
                                    &trans         &trans         &trans      &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tsl>;
         };
 
         layer_4 {
@@ -178,7 +174,6 @@
                                    &trans         &trans         &tog SCRL   &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tsl>;
         };
 
         layer_6 {
@@ -190,7 +185,6 @@
                                    &trans         &trans         &trans      &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tmv_fine>;
         };
     };
 };
