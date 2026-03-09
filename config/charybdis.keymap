@@ -4,17 +4,13 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// =============================================================================
-// Charybdis Cordless ZMK Keymap
-// Optimised for Victorian Government report writing + RSI management
-// =============================================================================
-
 #define BASE   0
 #define NAV    1
 #define SYM    2
 #define NUM    3
 #define WIN    4
-#define SCRL 5
+#define SCRL   5
+#define SNIPE  6
 
 &lt {
     tapping-term-ms = <200>;
@@ -23,7 +19,6 @@
 };
 
 / {
-
     behaviors {
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
@@ -88,6 +83,16 @@
             flavor = "tap-preferred";
             bindings = <&kp>, <&kp>;
         };
+
+        // Tap to toggle Scroll (Layer 5), Hold for Snipe (Layer 6)
+        sc_sn: scroll_snipe {
+            compatible = "zmk,behavior-hold-tap";
+            label = "SCROLL_SNIPE";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&tog>;
+        };
     };
 
     macros {
@@ -104,26 +109,24 @@
 
         layer_0 {
             bindings = <
-&kp ESC               &kp N1      &kp N2          &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &del_cad LC(LA(DEL)) DEL
-&kp TAB               &kp Q       &kp W           &e_snap LG(LEFT) E   &r_snap LG(RIGHT) R     &kp T       &kp Y      &kp U        &kp I       &kp O       &kp P         &kp BSLH
+&kp ESC               &kp N1      &kp N2          &kp N3         &kp N4         &kp N5        &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &del_cad LC(LA(DEL)) DEL
+&kp TAB               &kp Q       &kp W           &e_snap LG(LEFT) E   &r_snap LG(RIGHT) R     &kp T       &kp Y       &kp U        &kp I       &kp O       &kp P         &kp BSLH
 &gu_gd LG(DOWN) LG(UP) &hm LGUI A &hm LALT S      &hm LCTRL D    &hm LSHFT F    &kp G       &kp H      &hm RSHFT J  &hm RCTRL K &hm RALT L  &hm RGUI SEMI &kp SQT
 &kp EQUAL             &kp Z       &kp X           &kp C          &kp V          &kp B       &kp N      &kp M        &kp COMMA   &kp DOT     &kp FSLH      &kp MINUS
-                                                  &cw_nav NAV 0  &cb_sym SYM 0  &tog SCRL &lt NUM BSPC &kp SPACE
+                                                                 &cw_nav NAV 0  &cb_sym SYM 0  &sc_sn SNIPE SCRL &lt NUM BSPC &kp SPACE
                                                                  &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tmv_coarse>;
         };
 
         layer_1 {
             bindings = <
-&trans     &trans      &trans      &trans         &trans         &trans      &kp PG_UP  &kp HOME     &kp UP      &kp END     &kp DEL       &trans
+&trans     &trans      &trans      &trans         &trans         &trans      &kp PG_UP  &kp HOME     &kp UP      &kp END     &kp DEL        &trans
 &trans     &kp LC(Z)   &kp LC(X)   &kp LC(C)      &kp LC(V)      &kp LC(Y)   &kp PG_DN  &kp LEFT     &kp DOWN    &kp RIGHT   &trans        &trans
 &trans     &kp LGUI    &kp LALT    &kp LCTRL      &kp LSHFT      &tog WIN    &trans     &kp LC(LEFT) &trans      &kp LC(RIGHT) &trans      &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
                                    &trans         &trans         &trans      &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tmv_coarse>;
         };
 
         layer_2 {
@@ -142,11 +145,10 @@
 &trans     &kp F1      &kp F2      &kp F3         &kp F4         &kp F5      &kp F6     &kp F7       &kp F8      &kp F9      &kp F10       &trans
 &trans     &none       &none       &none          &none          &none       &none      &none        &none       &none       &none         &none
 &trans     &kp N1      &kp N2      &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &trans
-&trans     &none       &none       &none          &none          &none       &none      &none        &kp DOT     &none       &none         &trans
+&trans     &none       &none       &none          &none          &none       &none      &none        &kp DOT     &none       &none         &none
                                    &trans         &trans         &trans      &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
-            trackball-bindings = <&tsl>;
         };
 
         layer_4 {
@@ -166,10 +168,21 @@
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
-                                   &trans         &trans         &tog SCRL &trans     &trans
+                                   &trans         &trans         &tog SCRL   &trans     &trans
                                                   &mkp MB1       &mkp MB2    &kp ENTER
             >;
             trackball-bindings = <&tsl>;
+        };
+
+        layer_6 {
+            bindings = <
+&trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
+&trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
+&trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
+&trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
+                                   &trans         &trans         &trans      &trans     &trans
+                                                  &mkp MB1       &mkp MB2    &kp ENTER
+            >;
         };
     };
 };
