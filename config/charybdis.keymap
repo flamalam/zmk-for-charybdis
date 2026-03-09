@@ -8,10 +8,17 @@
 // Charybdis Cordless ZMK Keymap
 // Optimised for Victorian Government report writing + RSI management
 //
+// BASE LAYER CHANGES FROM STANDARD:
+//   Top-right:    tap = Fwd Delete   hold = Ctrl+Alt+Delete
+//   Bottom-left:  = / + (equals/plus)
+//   Left Shift:   tap = GUI+Up       hold = GUI+Down
+//   Hold E:       GUI+Left (snap left)
+//   Hold R:       GUI+Right (snap right)
+//
 // THUMB CLUSTER:
 //   Left top-left:    tap = Caps Word      hold = NAV layer
 //   Left top-middle:  tap = Ctrl+Backspace hold = SYM layer
-//   Left top-right:   tap = Scroll toggle  hold = Snipe mode
+//   Left top-right:   tap = Scroll toggle
 //   Left bottom-left: MB1 (left click)
 //   Left bottom-right:MB2 (right click)
 //
@@ -76,7 +83,7 @@
             bindings = <&mo>, <&caps_word>;
         };
 
-        // Left thumb top-middle: tap = Ctrl+Backspace macro, hold = SYM layer
+        // Left thumb top-middle: tap = Ctrl+Backspace, hold = SYM layer
         cb_sym: ctrl_bksp_sym {
             compatible = "zmk,behavior-hold-tap";
             label = "CTRL_BKSP_SYM";
@@ -84,6 +91,46 @@
             tapping-term-ms = <200>;
             flavor = "tap-preferred";
             bindings = <&mo>, <&ctrl_bksp>;
+        };
+
+        // Top-right corner: tap = Fwd Delete, hold = Ctrl+Alt+Delete
+        del_cad: del_ctrlaltdel {
+            compatible = "zmk,behavior-hold-tap";
+            label = "DEL_CAD";
+            #binding-cells = <2>;
+            tapping-term-ms = <500>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        // Left Shift key: tap = GUI+Up, hold = GUI+Down
+        gu_gd: gui_up_gui_down {
+            compatible = "zmk,behavior-hold-tap";
+            label = "GUI_UP_GUI_DOWN";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        // E key: tap = E, hold = GUI+Left (snap left)
+        e_snap: e_snap_left {
+            compatible = "zmk,behavior-hold-tap";
+            label = "E_SNAP_LEFT";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
+        };
+
+        // R key: tap = R, hold = GUI+Right (snap right)
+        r_snap: r_snap_right {
+            compatible = "zmk,behavior-hold-tap";
+            label = "R_SNAP_RIGHT";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&kp>, <&kp>;
         };
 
     };
@@ -107,15 +154,21 @@
 
         // ---------------------------------------------------------------------
         // LAYER 0: BASE
+        //
+        // Top-right:   tap = Fwd Delete, hold = Ctrl+Alt+Delete
+        // Bottom-left: = / + (equals key)
+        // Left Shift:  tap = GUI+Up (maximise), hold = GUI+Down (minimise)
+        // Hold E:      GUI+Left (snap left)
+        // Hold R:      GUI+Right (snap right)
         // ---------------------------------------------------------------------
         layer_0 {
             bindings = <
-&kp ESC    &kp N1      &kp N2      &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &kp BACKSPACE
-&kp TAB    &kp Q       &kp W       &kp E          &kp R          &kp T       &kp Y      &kp U        &kp I       &kp O       &kp P         &kp BSLH
-&kp LSHFT  &hm LGUI A  &hm LALT S  &hm LCTRL D    &hm LSHFT F    &kp G       &kp H      &hm RSHFT J  &hm RCTRL K &hm RALT L  &hm RGUI SEMI &kp SQT
-&kp LCTRL  &kp Z       &kp X       &kp C          &kp V          &kp B       &kp N      &kp M        &kp COMMA   &kp DOT     &kp FSLH      &kp MINUS
-                                   &cw_nav NAV 0  &cb_sym SYM 0  &tog SCROLL &lt NUM BSPC &kp SPACE
-                                                  &mkp MB1       &mkp MB2    &kp ENTER
+&kp ESC               &kp N1      &kp N2          &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &del_cad LC(LA(DEL)) DEL
+&kp TAB               &kp Q       &kp W           &e_snap LG(LEFT) E   &r_snap LG(RIGHT) R     &kp T       &kp Y      &kp U        &kp I       &kp O       &kp P         &kp BSLH
+&gu_gd LG(DOWN) LG(UP) &hm LGUI A &hm LALT S      &hm LCTRL D    &hm LSHFT F    &kp G       &kp H      &hm RSHFT J  &hm RCTRL K &hm RALT L  &hm RGUI SEMI &kp SQT
+&kp EQUAL             &kp Z       &kp X           &kp C          &kp V          &kp B       &kp N      &kp M        &kp COMMA   &kp DOT     &kp FSLH      &kp MINUS
+                                                  &cw_nav NAV 0  &cb_sym SYM 0  &tog SCROLL &lt NUM BSPC &kp SPACE
+                                                                 &mkp MB1       &mkp MB2    &kp ENTER
             >;
 
             trackball-bindings = <&tmv_coarse>;
@@ -141,6 +194,12 @@
         // ---------------------------------------------------------------------
         // LAYER 2: SYM — symbols + Bluetooth
         // Hold left thumb top-middle.
+        //
+        // BLUETOOTH — bottom left row:
+        //   Z = BT profile 0 (Windows)
+        //   X = BT profile 1 (Mac)
+        //   C = BT profile 2 (spare)
+        //   V = BT clear
         // ---------------------------------------------------------------------
         layer_2 {
             bindings = <
@@ -180,6 +239,8 @@
         //
         // Top row right: Y=Snap←  U=Mon←  I=Maximise  O=Mon→  P=Snap→
         // Top row left:  Q=VD←    W=VD→   E=VD New    R=VD Close
+        // Home row: A=Edge S=Outlook D=Word F=PDF G=eJustice
+        //           J=Centurion K=PIMS L=Teams ;=Notes '=Sticky Notes
         // ---------------------------------------------------------------------
         layer_4 {
             bindings = <
@@ -195,7 +256,6 @@
         // ---------------------------------------------------------------------
         // LAYER 5: SCROLL — trackball scroll mode
         // Tap left thumb top-right to toggle on/off.
-        // Tap same key again to exit.
         // ---------------------------------------------------------------------
         layer_5 {
             bindings = <
