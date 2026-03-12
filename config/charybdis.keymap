@@ -83,14 +83,14 @@
             bindings = <&mo>, <&caps_word>;
         };
 
-        // Left thumb top-middle: tap = Ctrl+Backspace, hold = SYM layer
-        cb_sym: ctrl_bksp_sym {
+        // Left thumb top-middle: tap = Enter, hold = SYM layer
+        ent_sym: enter_sym {
             compatible = "zmk,behavior-hold-tap";
-            label = "CTRL_BKSP_SYM";
+            label = "ENTER_SYM";
             #binding-cells = <2>;
             tapping-term-ms = <200>;
             flavor = "tap-preferred";
-            bindings = <&mo>, <&ctrl_bksp>;
+            bindings = <&mo>, <&kp>;
         };
 
         // Top-right corner: tap = Fwd Delete, hold = Ctrl+Alt+Delete
@@ -177,8 +177,8 @@
 &kp TAB               &kp Q       &kp W           &e_snap LG(LEFT) E   &r_snap LG(RIGHT) R     &kp T       &kp Y      &kp U        &kp I       &kp O       &kp P         &kp BSLH
 &gu_gd LG(DOWN) LG(UP) &hm LGUI A &hm LALT S      &hm LCTRL D    &hm LSHFT F    &kp G       &kp H      &hm RSHFT J  &hm RCTRL K &hm RALT L  &hm RGUI SEMI &kp SQT
 &kp EQUAL             &kp Z       &kp X           &kp C          &kp V          &kp B       &kp N      &kp M        &kp COMMA   &kp DOT     &kp FSLH      &kp MINUS
-                                                  &cw_nav NAV 0  &cb_sym SYM 0  &scrl_num NUM SCRL &kp BSPC &kp SPACE
-                                                                 &mkp MB1       &mkp MB2    &kp ENTER
+                                                  &cw_nav NAV 0  &ent_sym SYM ENTER  &scrl_num NUM SCRL &kp BSPC &kp SPACE
+                                                                 &mkp MB1       &mkp MB2    &ctrl_bksp
             >;
 
             trackball-bindings = <&tmv_coarse>;
@@ -195,7 +195,7 @@
 &trans     &kp LGUI    &kp LALT    &kp LCTRL      &kp LSHFT      &tog WIN    &trans     &kp LC(LEFT) &trans      &kp LC(RIGHT) &trans      &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &kp ENTER
+                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
             >;
 
             trackball-bindings = <&tmv_coarse>;
@@ -215,10 +215,10 @@
             bindings = <
 &kp GRAVE  &kp EXCL     &kp AT      &kp HASH       &kp DLLR       &kp PRCNT   &kp CARET  &kp AMPS     &kp STAR    &kp LBRC    &kp RBRC      &kp DEL
 &trans     &none        &none       &none          &none          &none       &none      &none        &none       &none       &none         &none
-&trans     &kp LPAR     &kp LBKT    &kp FSLH       &kp MINUS      &kp PIPE    &kp UNDER  &kp BSLH     &kp RBKT    &kp RPAR    &kp DQT       &kp SQT
+&trans     &kp LPAR     &trans      &kp LC(LEFT)   &kp LEFT       &kp UP      &kp DOWN   &kp RIGHT    &kp LC(RIGHT) &trans    &kp RPAR      &trans
 &trans     &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &bt BT_CLR     &trans      &kp EQUAL  &kp PLUS     &kp LT      &kp GT      &trans        &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &kp ENTER
+                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
             >;
         };
 
@@ -233,7 +233,7 @@
 &trans     &kp N1      &kp N2      &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &trans
 &trans     &none       &none       &none          &none          &none       &none      &none        &kp DOT     &none       &none         &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &kp ENTER
+                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
             >;
 
             trackball-bindings = <&tsl>;
@@ -259,7 +259,7 @@
 &trans     &kp LG(N1)       &kp LG(N2)        &kp LG(N3)    &kp LG(N4)     &kp LG(N5) &kp LG(N6)   &kp LG(N7)       &kp LG(N8) &kp LG(N9)        &kp LG(N0)    &trans
 &trans     &trans           &trans            &trans        &trans         &trans     &trans       &trans           &trans     &trans            &trans        &trans
                                               &tog WIN      &trans         &trans     &trans       &tog WIN
-                                                            &mkp MB1       &mkp MB2   &kp ENTER
+                                                            &mkp MB1       &mkp MB2   &ctrl_bksp
             >;
         };
 
@@ -274,7 +274,7 @@
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
                                    &trans         &trans         &scrl_num NUM SCRL &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &kp ENTER
+                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
             >;
 
             trackball-bindings = <&tsl>;
