@@ -4,47 +4,6 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// =============================================================================
-// Charybdis Cordless ZMK Keymap
-// Optimised for Victorian Government report writing + RSI management
-//
-// BASE LAYER CHANGES FROM STANDARD:
-//   Top-right:    tap = Fwd Delete   hold = Ctrl+Alt+Delete
-//   Bottom-left:  = / + (equals/plus)
-//   Left Shift:   tap = GUI+Up       hold = GUI+Down
-//   Hold E:       GUI+Left (snap left)
-//   Hold R:       GUI+Right (snap right)
-//
-// THUMB CLUSTER:
-//   Left top-left:    tap = Caps Word      hold = NAV layer
-//   Left top-middle:  tap = Ctrl+Backspace hold = SYM layer
-//   Left top-right:   tap = Scroll toggle
-//   Left bottom-left: MB1 (left click)
-//   Left bottom-right:MB2 (right click)
-//
-//   Right top-left:   tap = Backspace      hold = NUM layer
-//   Right top-right:  Space
-//   Right bottom:     Enter
-//
-// HOME ROW MODS (GACS order):
-//   Left:  A=GUI  S=ALT  D=CTRL  F=SHIFT
-//   Right: J=SHIFT  K=CTRL  L=ALT  ;=GUI
-//
-// LAYERS:
-//   0 BASE   — QWERTY + home row mods
-//   1 NAV    — arrows, clipboard, WIN layer toggle on G
-//   2 SYM    — symbols, Bluetooth
-//   3 NUM    — numbers + F-keys
-//   4 WIN    — window/app management
-//   5 SCROLL — trackball scroll mode (toggled)
-//
-// BLUETOOTH (SYM layer bottom-left row):
-//   Z = BT profile 0 (Windows)
-//   X = BT profile 1 (Mac)
-//   C = BT profile 2 (spare)
-//   V = BT clear
-// =============================================================================
-
 #define BASE   0
 #define NAV    1
 #define SYM    2
@@ -62,7 +21,6 @@
 
     behaviors {
 
-        // Home row mod
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
             label = "HOMEROW_MODS";
@@ -73,7 +31,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // Left thumb top-left: tap = Caps Word, hold = NAV layer
         cw_nav: caps_word_nav {
             compatible = "zmk,behavior-hold-tap";
             label = "CAPS_WORD_NAV";
@@ -83,7 +40,6 @@
             bindings = <&mo>, <&caps_word>;
         };
 
-        // Left thumb top-middle: tap = Enter, hold = SYM layer
         ent_sym: enter_sym {
             compatible = "zmk,behavior-hold-tap";
             label = "ENTER_SYM";
@@ -93,7 +49,6 @@
             bindings = <&mo>, <&kp>;
         };
 
-        // Top-right corner: tap = Fwd Delete, hold = Ctrl+Alt+Delete
         del_cad: del_ctrlaltdel {
             compatible = "zmk,behavior-hold-tap";
             label = "DEL_CAD";
@@ -103,7 +58,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // Left Shift key: tap = GUI+Up, hold = GUI+Down
         gu_gd: gui_up_gui_down {
             compatible = "zmk,behavior-hold-tap";
             label = "GUI_UP_GUI_DOWN";
@@ -113,7 +67,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // E key: tap = E, hold = GUI+Left (snap left)
         e_snap: e_snap_left {
             compatible = "zmk,behavior-hold-tap";
             label = "E_SNAP_LEFT";
@@ -123,7 +76,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // R key: tap = R, hold = GUI+Right (snap right)
         r_snap: r_snap_right {
             compatible = "zmk,behavior-hold-tap";
             label = "R_SNAP_RIGHT";
@@ -133,7 +85,6 @@
             bindings = <&kp>, <&kp>;
         };
 
-        // Left thumb top-right: tap = scroll toggle, hold = NUM layer
         scrl_num: scroll_num {
             compatible = "zmk,behavior-hold-tap";
             label = "SCROLL_NUM";
@@ -145,32 +96,9 @@
 
     };
 
-    macros {
-
-        // Ctrl+Backspace — delete whole word to the left
-        ctrl_bksp: ctrl_bksp {
-            compatible = "zmk,behavior-macro";
-            label = "CTRL_BKSP";
-            #binding-cells = <0>;
-            bindings = <&macro_press &kp LCTRL>
-                     , <&macro_tap &kp BSPC>
-                     , <&macro_release &kp LCTRL>;
-        };
-
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
-        // ---------------------------------------------------------------------
-        // LAYER 0: BASE
-        //
-        // Top-right:   tap = Fwd Delete, hold = Ctrl+Alt+Delete
-        // Bottom-left: = / + (equals key)
-        // Left Shift:  tap = GUI+Up (maximise), hold = GUI+Down (minimise)
-        // Hold E:      GUI+Left (snap left)
-        // Hold R:      GUI+Right (snap right)
-        // ---------------------------------------------------------------------
         layer_0 {
             bindings = <
 &kp ESC               &kp N1      &kp N2          &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &del_cad LC(LA(DEL)) DEL
@@ -178,16 +106,12 @@
 &gu_gd LG(DOWN) LG(UP) &hm LGUI A &hm LALT S      &hm LCTRL D    &hm LSHFT F    &kp G       &kp H      &hm RSHFT J  &hm RCTRL K &hm RALT L  &hm RGUI SEMI &kp SQT
 &kp EQUAL             &kp Z       &kp X           &kp C          &kp V          &kp B       &kp N      &kp M        &kp COMMA   &kp DOT     &kp FSLH      &kp MINUS
                                                   &cw_nav NAV 0  &ent_sym SYM ENTER  &scrl_num NUM SCRL &kp BSPC &kp SPACE
-                                                                 &mkp MB1       &mkp MB2    &ctrl_bksp
+                                                                 &mkp MB1       &mkp MB2    &kp LC(BSPC)
             >;
 
             trackball-bindings = <&tmv_coarse>;
         };
 
-        // ---------------------------------------------------------------------
-        // LAYER 1: NAV
-        // Hold left thumb top-left. Tap G to toggle WIN layer.
-        // ---------------------------------------------------------------------
         layer_1 {
             bindings = <
 &trans     &trans      &trans      &trans         &trans         &trans      &kp PG_UP  &kp HOME     &kp UP      &kp END     &kp DEL       &trans
@@ -195,22 +119,12 @@
 &trans     &kp LGUI    &kp LALT    &kp LCTRL      &kp LSHFT      &tog WIN    &trans     &kp LC(LEFT) &trans      &kp LC(RIGHT) &trans      &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
+                                                  &mkp MB1       &mkp MB2    &kp LC(BSPC)
             >;
 
             trackball-bindings = <&tmv_coarse>;
         };
 
-        // ---------------------------------------------------------------------
-        // LAYER 2: SYM — symbols + Bluetooth
-        // Hold left thumb top-middle.
-        //
-        // BLUETOOTH — bottom left row:
-        //   Z = BT profile 0 (Windows)
-        //   X = BT profile 1 (Mac)
-        //   C = BT profile 2 (spare)
-        //   V = BT clear
-        // ---------------------------------------------------------------------
         layer_2 {
             bindings = <
 &kp GRAVE  &kp EXCL     &kp AT      &kp HASH       &kp DLLR       &kp PRCNT   &kp CARET  &kp AMPS     &kp STAR    &kp LBRC    &kp RBRC      &kp DEL
@@ -218,14 +132,10 @@
 &trans     &kp LPAR     &trans      &kp LC(LEFT)   &kp LEFT       &kp UP      &kp DOWN   &kp RIGHT    &kp LC(RIGHT) &trans    &kp RPAR      &trans
 &trans     &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2  &bt BT_CLR     &trans      &kp EQUAL  &kp PLUS     &kp LT      &kp GT      &trans        &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
+                                                  &mkp MB1       &mkp MB2    &kp LC(BSPC)
             >;
         };
 
-        // ---------------------------------------------------------------------
-        // LAYER 3: NUM — numbers on home row, F-keys on top row
-        // Hold right thumb top-left (Backspace key).
-        // ---------------------------------------------------------------------
         layer_3 {
             bindings = <
 &trans     &kp F1      &kp F2      &kp F3         &kp F4         &kp F5      &kp F6     &kp F7       &kp F8      &kp F9      &kp F10       &trans
@@ -233,25 +143,12 @@
 &trans     &kp N1      &kp N2      &kp N3         &kp N4         &kp N5      &kp N6     &kp N7       &kp N8      &kp N9      &kp N0        &trans
 &trans     &none       &none       &none          &none          &none       &none      &none        &kp DOT     &none       &none         &trans
                                    &trans         &trans         &trans      &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
+                                                  &mkp MB1       &mkp MB2    &kp LC(BSPC)
             >;
 
             trackball-bindings = <&tsl>;
         };
 
-        // ---------------------------------------------------------------------
-        // LAYER 4: WIN — window & app management
-        // Toggle via NAV layer G key.
-        //
-        // TASKBAR PIN ORDER:
-        //   1=Edge  2=Outlook  3=Word  4=Adobe PDF  5=eJustice
-        //   6=Centurion  7=PIMS  8=Teams  9=Notes  0=Sticky Notes
-        //
-        // Top row right: Y=Snap←  U=Mon←  I=Maximise  O=Mon→  P=Snap→
-        // Top row left:  Q=VD←    W=VD→   E=VD New    R=VD Close
-        // Home row: A=Edge S=Outlook D=Word F=PDF G=eJustice
-        //           J=Centurion K=PIMS L=Teams ;=Notes '=Sticky Notes
-        // ---------------------------------------------------------------------
         layer_4 {
             bindings = <
 &trans     &kp LG(LC(LEFT)) &kp LG(LC(RIGHT)) &kp LG(LC(D)) &kp LG(LC(F4)) &trans    &kp LG(LEFT) &kp LG(LS(LEFT)) &kp LG(UP) &kp LG(LS(RIGHT)) &kp LG(RIGHT) &trans
@@ -259,14 +156,10 @@
 &trans     &kp LG(N1)       &kp LG(N2)        &kp LG(N3)    &kp LG(N4)     &kp LG(N5) &kp LG(N6)   &kp LG(N7)       &kp LG(N8) &kp LG(N9)        &kp LG(N0)    &trans
 &trans     &trans           &trans            &trans        &trans         &trans     &trans       &trans           &trans     &trans            &trans        &trans
                                               &tog WIN      &trans         &trans     &trans       &tog WIN
-                                                            &mkp MB1       &mkp MB2   &ctrl_bksp
+                                                            &mkp MB1       &mkp MB2   &kp LC(BSPC)
             >;
         };
 
-        // ---------------------------------------------------------------------
-        // LAYER 5: SCROLL — trackball scroll mode
-        // Tap left thumb top-right to toggle on/off.
-        // ---------------------------------------------------------------------
         layer_5 {
             bindings = <
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
@@ -274,7 +167,7 @@
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
 &trans     &trans      &trans      &trans         &trans         &trans      &trans     &trans       &trans      &trans      &trans        &trans
                                    &trans         &trans         &scrl_num NUM SCRL &trans     &trans
-                                                  &mkp MB1       &mkp MB2    &ctrl_bksp
+                                                  &mkp MB1       &mkp MB2    &kp LC(BSPC)
             >;
 
             trackball-bindings = <&tsl>;
