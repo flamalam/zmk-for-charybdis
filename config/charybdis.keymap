@@ -10,7 +10,7 @@
 #define NUM    3
 #define WIN    4
 #define SCRL   5
-#define M_UT   6 // New Mouse Utility Layer
+#define M_UT   6
 
 &lt {
     tapping-term-ms = <200>;
@@ -20,9 +20,10 @@
 
 / {
     macros {
-        // Jitter-free double click macro
+        // Corrected macro with required label
         db_click: db_click {
             compatible = "zmk,behavior-macro";
+            label = "DOUBLE_CLICK_MACRO";
             #binding-cells = <0>;
             wait-ms = <15>;
             tap-ms = <15>;
@@ -31,9 +32,6 @@
     };
 
     behaviors {
-        // Special hold-tap for the left click button
-        // Tap = Single Click, Hold = Activate Mouse Utility Layer
-        // Double-tap and hold = Mouse Drag
         lt_mouse: lt_mouse {
             compatible = "zmk,behavior-hold-tap";
             label = "LT_MOUSE";
@@ -130,7 +128,6 @@
                                                   &cw_nav NAV 0  &ent_sym SYM ENTER  &scrl_num NUM SCRL &kp BSPC &kp SPACE
                                                                  &lt_mouse M_UT MB1  &mkp MB2    &kp LC(BSPC)
             >;
-
             trackball-bindings = <&tmv_coarse>;
         };
 
@@ -143,7 +140,6 @@
                                    &trans          &trans          &trans      &trans     &trans
                                                    &mkp MB1        &mkp MB2    &kp LC(BSPC)
             >;
-
             trackball-bindings = <&tmv_coarse>;
         };
 
@@ -167,7 +163,6 @@
                                    &trans          &trans          &trans      &trans     &trans
                                                    &mkp MB1        &mkp MB2    &kp LC(BSPC)
             >;
-
             trackball-bindings = <&tsl>;
         };
 
@@ -191,11 +186,9 @@
                                    &trans          &trans          &scrl_num NUM SCRL &trans     &trans
                                                    &mkp MB1        &mkp MB2    &kp LC(BSPC)
             >;
-
             trackball-bindings = <&tsl>;
         };
 
-        // NEW LAYER 6: Mouse Utility Layer
         layer_6 {
             bindings = <
 &trans     &trans      &trans      &trans          &trans          &trans      &trans     &trans       &trans      &trans      &trans        &trans
